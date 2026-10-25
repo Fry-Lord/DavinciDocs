@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- TEMPORANEO: refresh automatico ogni 5 secondi durante lo sviluppo -->
+  <!--<meta http-equiv="refresh" content="5">-->
+  <title>DaVinciDocs</title>
+  <!-- Font caricati dal CDN di Google Fonts: gia' "esterni", ma scaricati ad ogni visita.
+       Per lavorare offline o velocizzare il caricamento si possono scaricare i file .woff2
+       e servirli da qui (es. css/fonts/) con una @font-face in style.css. -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Poppins:wght@400&family=Google+Sans+Flex:opsz,wght@1..144,1..1000&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <img src="img/logo.svg" width="34" height="34" alt="Logo DaVinciDocs">
+    <span>DaVinciDocs</span>
+  </div>
+  <div class="search-wrap">
+    <div class="search-bar">
+      <img src="img/icon-search.svg" width="16" height="16" alt="">
+      <input type="text" placeholder="Cerca dispense, esercitazioni, materiali..." aria-label="Cerca">
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <div class="flags">
+      <img src="img/flag-it.svg" width="32" height="32" alt="Italiano">
+      <img src="img/flag-en.svg" width="32" height="32" alt="English">
+    </div>
+    <span class="topbar-username" id="topbarUsername" hidden><span class="username-full" id="usernameFull"></span><span class="username-initials" id="usernameInitials"></span></span>
+    <div class="menu-wrap">
+      <button class="menu-pill" id="menuBtn" type="button" aria-haspopup="true" aria-expanded="false">
+        <span>MENU</span>
+        <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+          <line x1="0" y1="2" x2="20" y2="2" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+          <line x1="0" y1="12" x2="20" y2="12" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="menu-dropdown" id="menuDropdown">
+        <button class="menu-item" id="loginItem" type="button">Login</button>
+        <div class="menu-divider"></div>
+        <a href="#" class="menu-item">Inserisci materiali</a>
+        <a href="#" class="menu-item">Materiali per indirizzo</a>
+        <div class="menu-divider"></div>
+        <button class="menu-item" id="logoutItem" type="button" hidden>Logout</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1>IL PORTO SICURO PER IL TUO STUDIO</h1>
+    <p class="lead">La piattaforma dell'ITET Leonardo da Vinci di Milazzo<br>per condividere e ritrovare dispense, esercitazioni e materiali</p>
+    <div class="hero-cta">
+      <a href="#" class="btn-primary">Accedi</a>
+      <a href="#" class="btn-secondary">Esplora i materiali senza registrarti</a>
+    </div>
+    <div class="hero-stats">
+      <span><b>180+</b> materiali condivisi</span>
+      <span><b>6</b> indirizzi di studio</span>
+      <span><b>5</b> anni di corso</span>
+    </div>
+  </div>
+  <a href="https://www.davincimilazzo.edu.it/" class="site-caption" target="_blank" rel="noopener">ITET Leonardo da Vinci - Milazzo</a>
+</section>
+
+<!-- ===== FINESTRA DI LOGIN (modal): nascosta, si apre con la classe "open" (js/main.js) ===== -->
+<div class="modal-backdrop" id="loginBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <button class="modal-close" id="modalClose" type="button" aria-label="Chiudi">&times;</button>
+    <div class="modal-left">
+      <div class="modal-left-top">
+        <div class="modal-left-brand">
+          <img src="img/logo.svg" width="30" height="30" alt="Logo DaVinciDocs">
+          <span>DaVinciDocs</span>
+        </div>
+        <div class="modal-left-copy">
+          <h2>IL PORTO SICURO<br>PER IL TUO STUDIO</h2>
+          <p>La piattaforma dell'ITET Leonardo da Vinci di Milazzo per condividere e ritrovare dispense, esercitazioni e materiali di ogni indirizzo di studio</p>
+        </div>
+      </div>
+      <div class="modal-left-foot">ITET Leonardo da Vinci - Milazzo</div>
+    </div>
+    <div class="modal-right">
+      <h3 id="authTitle">Accedi al tuo account</h3>
+      <p id="authSubtitle">Inserisci le tue credenziali per accedere</p>
+      <form id="authForm">
+        <label class="field-label" for="authEmail">Email istituzionale</label>
+        <input class="field-input" type="email" id="authEmail" placeholder="nome.cognome@davincimilazzo.edu.it" required>
+        <label class="field-label" for="authPassword">Password</label>
+        <input class="field-input" type="password" id="authPassword" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required>
+        <div class="field-row" id="rememberRow">
+          <label class="checkbox-label"><input type="checkbox"> Ricordami</label>
+          <a href="#" class="field-link">Password dimenticata?</a>
+        </div>
+        <button type="submit" class="auth-submit" id="authSubmit">Accedi</button>
+      </form>
+      <p class="auth-note" id="authNote">Gli account docente sono creati dalla segreteria didattica</p>
+    </div>
+  </div>
+</div>
+<!-- ===== FINE FINESTRA DI LOGIN ===== -->
+
+<script src="js/main.js" defer></script>
+</body>
+</html>
