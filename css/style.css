@@ -152,6 +152,20 @@ header.topbar{
 .field-input:focus{ border-color:var(--sand); }
 .field-input::placeholder{ color:rgba(var(--navy-rgb),0.35); }
 
+/* campo password con pulsante "occhio" per mostrare/nascondere il testo */
+.field-password{ position:relative; }
+.field-password .field-input{ padding-right:52px; }
+.field-password .field-input::-ms-reveal{ display:none; } /* toglie l'occhio nativo di Edge, gia' c'e' il nostro */
+.toggle-password{
+  position:absolute; top:50%; right:8px; transform:translateY(-50%);
+  width:36px; height:36px; display:flex; align-items:center; justify-content:center;
+  border:none; border-radius:50%; background:none; cursor:pointer; opacity:0.6;
+  transition:background-color .12s ease, opacity .12s ease;
+}
+.toggle-password:hover{ background:rgba(var(--navy-rgb),0.08); opacity:1; }
+.toggle-password[aria-pressed="true"]{ opacity:1; }
+.toggle-password img{ display:block; }
+
 .field-row{ margin-top:16px; display:flex; align-items:center; justify-content:space-between; font-size:13px; }
 .checkbox-label{ display:flex; align-items:center; gap:8px; color:rgba(var(--navy-rgb),0.75); }
 .field-link{ color:var(--navy); font-weight:600; }
@@ -166,7 +180,7 @@ header.topbar{
 .auth-submit:hover{ background:var(--navy); color:var(--sand); }
 
 .auth-note{ margin-top:10px; text-align:center; font-family:'Poppins',sans-serif; font-size:11.5px; color:rgba(var(--navy-rgb),0.5); }
-
+.auth-error{ margin-top:10px; text-align:center; font-family:'Poppins',sans-serif; font-size:12.5px; color:#B3261E; }
 @media (max-width:720px){
   .modal{ flex-direction:column; }
   .modal-left{ flex:0 0 auto; padding:28px 24px; }

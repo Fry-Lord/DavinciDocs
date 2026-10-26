@@ -16,6 +16,35 @@
     menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
 
+  // aggiornano topbar e menu dopo login, logout o al caricamento della pagina
+  function mostraUtente(nome, cognome){
+    var nomeCompleto = nome + ' ' + cognome;
+    loginItem.textContent = nomeCompleto;
+    loginItem.classList.add('user');
+    logoutItem.hidden = false;
+    usernameFull.textContent = nomeCompleto;
+    usernameInitials.textContent = getInitials(nomeCompleto);
+    topbarUsername.hidden = false;
+  }
+  function mostraOspite(){
+    loginItem.textContent = 'Login';
+    loginItem.classList.remove('user');
+    logoutItem.hidden = true;
+    topbarUsername.hidden = true;
+    usernameFull.textContent = '';
+    usernameInitials.textContent = '';
+  }
+
+  // al caricamento: se la sessione PHP e' ancora aperta, l'utente resta collegato
+  fetch('api/sessione.php')
+    .then(function(risposta){ return risposta.json(); })
+    .then(function(dati){
+      if (dati.collegato) mostraUtente(dati.nome, dati.cognome);
+    })
+    .catch(function(){
+      console.error('Verifica della sessione non riuscita: server non raggiungibile.');
+    });
+
   menuBtn.addEventListener('click', function(e){
     e.stopPropagation();
     setMenuOpen(!dropdown.classList.contains('open'));
@@ -25,13 +54,16 @@
   });
 
   logoutItem.addEventListener('click', function(){
-    loginItem.textContent = 'Login';
-    loginItem.classList.remove('user');
-    logoutItem.hidden = true;
-    topbarUsername.hidden = true;
-    usernameFull.textContent = '';
-    usernameInitials.textContent = '';
-    setMenuOpen(false);
+    fetch('api/logout.php', { method: 'POST' })
+      .then(function(risposta){ return risposta.json(); })
+      .then(function(dati){
+        if (!dati.successo) return;
+        mostraOspite();
+        setMenuOpen(false);
+      })
+      .catch(function(){
+        console.error('Logout non riuscito: server non raggiungibile.');
+      });
   });
 
   // ===== Login modal =====
@@ -39,6 +71,20 @@
   var modalClose = document.getElementById('modalClose');
   var authForm = document.getElementById('authForm');
   var heroLoginBtn = document.querySelector('.hero-cta .btn-primary');
+  var passwordInput = document.getElementById('authPassword');
+  var togglePassword = document.getElementById('togglePassword');
+  var togglePasswordIcon = togglePassword.querySelector('img');
+
+  function setPasswordVisible(visible){
+    passwordInput.type = visible ? 'text' : 'password';
+    togglePasswordIcon.src = visible ? 'img/icon-eye-off.svg' : 'img/icon-eye.svg';
+    togglePassword.setAttribute('aria-label', visible ? 'Nascondi password' : 'Mostra password');
+    togglePassword.setAttribute('aria-pressed', visible ? 'true' : 'false');
+  }
+  togglePassword.addEventListener('click', function(){
+    setPasswordVisible(passwordInput.type === 'password');
+    passwordInput.focus();
+  });
 
   function openModal(){
     backdrop.classList.add('open');
@@ -46,6 +92,7 @@
   }
   function closeModal(){
     backdrop.classList.remove('open');
+    setPasswordVisible(false);
   }
 
   loginItem.addEventListener('click', function(){
@@ -64,14 +111,37 @@
   document.addEventListener('keydown', function(e){
     if (e.key === 'Escape') closeModal();
   });
+
   authForm.addEventListener('submit', function(e){
     e.preventDefault();
-    loginItem.textContent = 'Maurizio Minissale';
-    loginItem.classList.add('user');
-    logoutItem.hidden = false;
-    usernameFull.textContent = 'Maurizio Minissale';
-    usernameInitials.textContent = getInitials('Maurizio Minissale');
-    topbarUsername.hidden = false;
-    closeModal();
+    var email = document.getElementById('authEmail').value;
+    var password = document.getElementById('authPassword').value;
+    var errorEl = document.getElementById('authError');
+    var submitBtn = document.getElementById('authSubmit');
+
+    submitBtn.disabled = true;
+    fetch('api/login.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'email=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password)
+    })
+      .then(function(risposta){ return risposta.json(); })
+      .then(function(dati){
+        if (!dati.successo) {
+          errorEl.textContent = dati.errore;
+          errorEl.hidden = false;
+          return;
+        }
+        errorEl.hidden = true;
+        mostraUtente(dati.nome, dati.cognome);
+        closeModal();
+      })
+      .catch(function(){
+        errorEl.textContent = 'Errore di connessione al server.';
+        errorEl.hidden = false;
+      })
+      .finally(function(){
+        submitBtn.disabled = false;
+      });
   });
 })();

@@ -92,13 +92,19 @@
         <label class="field-label" for="authEmail">Email istituzionale</label>
         <input class="field-input" type="email" id="authEmail" placeholder="nome.cognome@davincimilazzo.edu.it" required>
         <label class="field-label" for="authPassword">Password</label>
-        <input class="field-input" type="password" id="authPassword" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required>
+        <div class="field-password">
+          <input class="field-input" type="password" id="authPassword" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required>
+          <button class="toggle-password" id="togglePassword" type="button" aria-label="Mostra password" aria-pressed="false">
+            <img src="img/icon-eye.svg" width="20" height="20" alt="">
+          </button>
+        </div>
         <div class="field-row" id="rememberRow">
           <label class="checkbox-label"><input type="checkbox"> Ricordami</label>
           <a href="#" class="field-link">Password dimenticata?</a>
         </div>
         <button type="submit" class="auth-submit" id="authSubmit">Accedi</button>
       </form>
+      <p class="auth-error" id="authError" hidden></p>
       <p class="auth-note" id="authNote">Gli account docente sono creati dalla segreteria didattica</p>
     </div>
   </div>
