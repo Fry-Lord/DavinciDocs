@@ -6,6 +6,9 @@
   var topbarUsername = document.getElementById('topbarUsername');
   var usernameFull = document.getElementById('usernameFull');
   var usernameInitials = document.getElementById('usernameInitials');
+  var heroLoginBtn = document.querySelector('.hero-cta .btn-primary');
+  var exploreBtn = document.getElementById('exploreBtn');
+  var exploreBtnTestoBase = exploreBtn ? exploreBtn.textContent : '';
 
   function getInitials(name){
     return name.split(' ').map(function(p){ return p.charAt(0).toUpperCase(); }).join('');
@@ -16,8 +19,12 @@
     menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
 
+  // true quando un utente ha effettuato il login; usato anche dal pulsante dell'hero
+  var collegato = false;
+
   // aggiornano topbar e menu dopo login, logout o al caricamento della pagina
   function mostraUtente(nome, cognome){
+    collegato = true;
     var nomeCompleto = nome + ' ' + cognome;
     loginItem.textContent = nomeCompleto;
     loginItem.classList.add('user');
@@ -25,14 +32,29 @@
     usernameFull.textContent = nomeCompleto;
     usernameInitials.textContent = getInitials(nomeCompleto);
     topbarUsername.hidden = false;
+    if (heroLoginBtn) {
+      heroLoginBtn.textContent = 'Carica materiali';
+      heroLoginBtn.classList.add('carica');
+    }
+    if (exploreBtn) {
+      exploreBtn.textContent = 'Ciao ' + nome + ', esplora i materiali';
+    }
   }
   function mostraOspite(){
+    collegato = false;
     loginItem.textContent = 'Login';
     loginItem.classList.remove('user');
     logoutItem.hidden = true;
     topbarUsername.hidden = true;
     usernameFull.textContent = '';
     usernameInitials.textContent = '';
+    if (heroLoginBtn) {
+      heroLoginBtn.textContent = 'Accedi';
+      heroLoginBtn.classList.remove('carica');
+    }
+    if (exploreBtn) {
+      exploreBtn.textContent = exploreBtnTestoBase;
+    }
   }
 
   // al caricamento: se la sessione PHP e' ancora aperta, l'utente resta collegato
@@ -70,7 +92,6 @@
   var backdrop = document.getElementById('loginBackdrop');
   var modalClose = document.getElementById('modalClose');
   var authForm = document.getElementById('authForm');
-  var heroLoginBtn = document.querySelector('.hero-cta .btn-primary');
   var passwordInput = document.getElementById('authPassword');
   var togglePassword = document.getElementById('togglePassword');
   var togglePasswordIcon = togglePassword.querySelector('img');
@@ -95,11 +116,18 @@
     setPasswordVisible(false);
   }
 
-  loginItem.addEventListener('click', function(){
+  loginItem.addEventListener('click', function(e){
+    // da loggato e' un link vuoto (#), come il nome nella topbar: per ora
+    // non apre piu' la finestra di login.
+    if (collegato) return;
+    e.preventDefault();
     openModal();
   });
   if (heroLoginBtn) {
     heroLoginBtn.addEventListener('click', function(e){
+      // da loggato il pulsante è "Carica materiali": in attesa della pagina
+      // vera (sezione 6.6) resta un link vuoto, come "Esplora i materiali".
+      if (collegato) return;
       e.preventDefault();
       openModal();
     });
